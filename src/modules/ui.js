@@ -1,6 +1,5 @@
 import { CONFIG } from './config.js';
 import { spotCache } from './spots.js';
-import { pskReporterConfig } from './cards/psk-reporter.config.js';
 
 export const updateHeaderInfo = () => {
     const now = new Date();
@@ -63,13 +62,6 @@ const formatAge = (timestamp) => {
     }
     
     const now = Math.floor(Date.now() / 1000);
-    console.log('Age calc:', {
-        now,
-        timestamp,
-        type: typeof timestamp,
-        diff: now - timestamp
-    });
-    
     const diff = now - timestamp;
     if (isNaN(diff)) return '';
     
@@ -91,13 +83,20 @@ const formatGrid = (grid, columnConfig) => {
     return grid.substring(0, maxDigits);
 };
 
-const formatCell = (colId, spot, columnConfig) => {
-    switch(colId) {
-        case 'age': return formatAge(spot.flowStartSeconds);
-        case 'grid': return formatGrid(spot.grid, columnConfig);
-        case 'distance': return formatDistance(spot.distance, columnConfig);
-        default: return spot[colId] || '';
-    }
+const formatCell = (cardId, colId, data, colConfig) => {
+    const formatters = {
+        pskReporter: {
+            age: (d) => formatAge(d.flowStartSeconds),
+            grid: (d) => formatGrid(d.grid, colConfig),
+            distance: (d) => formatDistance(d.distance, colConfig)
+        },
+        bandSummary: {
+            activity: (d) => formatActivity(d.activity),
+            spots: (d) => d.spots.toString()
+        }
+    };
+
+    return formatters[cardId]?.[colId]?.(data) ?? data[colId] ?? '';
 };
 
 const getColumnHeader = (col) => {
@@ -123,21 +122,21 @@ const renderSpots = (currentSpots, paginator) => {
             ${currentSpots.map(spot => `
                 <tr>
                     ${columns.map(col => 
-                        `<td data-align="${col.align}">${formatCell(col.id, spot, col)}</td>`
+                        `<td data-align="${col.align}">${formatCell('pskReporter', col.id, spot, col)}</td>`
                     ).join('')}
                 </tr>
             `).join('')}
         </tbody>
     `;
     return `
-        <div class="table-controls">
-            <button onclick="toggleTableConfig()">⚙️ Configure Table</button>
-        </div>
         <table class="qso-table">
             ${thead}
         </table>
+        <p>
+            Page ${paginator.currentPage + 1}/${paginator.totalPages}
+        </p>
         <div class="spot-update-time">
-            ${spotCache.receptionReport.length} spots in last 24h (Page ${paginator.currentPage + 1}/${paginator.totalPages})
+            ${spotCache.receptionReport.length} spots in last 24h
             <br>
             Last updated: ${new Date().toLocaleTimeString()}
         </div>
@@ -196,25 +195,44 @@ window.toggleTableConfig = () => {
     dialog.showModal();
 };
 
+export class CardManager {
+    static renderCard(cardId, data, element) {
+        const config = CONFIG.cards[cardId];
+        if (!config || !element) return;
+
+        const visibleColumns = config.display.columns.filter(col => col.visible);
+        
+        const content = document.createElement('div');
+        content.innerHTML = `
+            <table class="qso-table">
+                <thead>
+                    <tr>${visibleColumns.map(col => 
+                        `<th data-align="${col.align}">${col.label}</th>`
+                    ).join('')}</tr>
+                </thead>
+                <tbody>
+                    ${data.slice(0, config.display.maxItems).map(item => `
+                        <tr>${visibleColumns.map(col => 
+                            `<td data-align="${col.align}">${formatCell(cardId, col.id, item, col)}</td>`
+                        ).join('')}</tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            ${config.display.showLastUpdate ? `
+                <div class="card-footer">
+                    <span>${data.length} entries</span>
+                    <span>Last update: ${new Date().toLocaleTimeString()}</span>
+                </div>
+            ` : ''}
+        `;
+        
+        element.replaceChildren(content);
+    }
+}
+
 export const updateTable = (spots) => {
-    if (!spots?.length) return;
-    const qsoListElement = document.getElementById('qso-list');
-    if (!qsoListElement) return;
-
-    const paginator = new CardPaginator('qso-list', spots, CONFIG.display.cards.itemsPerPage);
-    
-    const renderSpotsWrapper = (currentSpots) => {
-        qsoListElement.innerHTML = renderSpots(currentSpots, paginator);
-    };
-
-    // Initial render
-    renderSpotsWrapper(paginator.renderPage());
-
-    // Start cycling
-    if (window.spotCycleTimer) clearInterval(window.spotCycleTimer);
-    window.spotCycleTimer = setInterval(() => {
-        renderSpotsWrapper(paginator.nextPage());
-    }, CONFIG.display.cards.cycleInterval * 1000);
+    const element = document.getElementById('qso-list');
+    CardManager.renderCard('pskReporter', spots, element);
 };
 
 export const startCountdown = () => {

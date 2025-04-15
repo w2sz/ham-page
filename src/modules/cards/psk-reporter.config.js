@@ -2,14 +2,16 @@ export const pskReporterConfig = {
     id: 'psk-reporter',
     title: 'PSK Reporter',
     display: {
-        itemsPerPage: 15,
+        // Maximum number of spots to display in the table
+        maxItems: 20,
         cycleInterval: 10,
+        showLastUpdate: true,
         columns: [
-            { id: 'call', label: 'CALL', align: 'right' },
-            { id: 'freq', label: 'FREQ', align: 'left' },
+            { id: 'call', label: 'CALL', align: 'left' },
+            { id: 'freq', label: 'FREQ', align: 'right' },
             { id: 'age', label: 'AGE', align: 'center' },
             { id: 'grid', label: 'GRID', align: 'center', maxDigits: 4 },
-            { id: 'distance', label: 'KM/MI', align: 'right', unit: 'km' },
+            { id: 'distance', label: 'DIST', align: 'right', unit: 'km' },
             // Available but hidden columns
             // { id: 'time', label: 'TIME', align: 'left' },
             // { id: 'mode', label: 'MODE', align: 'left' },

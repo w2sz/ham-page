@@ -1,6 +1,3 @@
-import { pskReporterConfig } from './cards/psk-reporter.config.js';
-import { bandSummaryConfig } from './cards/band-summary.config.js';
-
 export const CONFIG = {
     station: {
         callsign: "W1AW",
@@ -46,6 +43,48 @@ export const CONFIG = {
                     'psk-reporter': { slot: 1, height: 'full' },
                     'band-summary': { slot: 2, height: 'full' }
                 }
+            }
+        }
+    },
+    refreshIntervals: {
+        pskReporter: 300,  // 5 minutes
+        bandSummary: 300,  // 5 minutes
+        quotes: 30         // 30 seconds
+    },
+    cards: {
+        pskReporter: {
+            id: 'psk-reporter',
+            title: 'PSK Reporter',
+            display: {
+                maxItems: 15,
+                cycleInterval: 10,
+                showLastUpdate: true,
+                columns: [
+                    { id: 'call', label: 'CALL', align: 'left', visible: true },
+                    { id: 'freq', label: 'FREQ', align: 'right', visible: true },
+                    { id: 'age', label: 'AGE', align: 'center', visible: true },
+                    { id: 'grid', label: 'GRID', align: 'center', maxDigits: 4, visible: true },
+                    { id: 'distance', label: 'DIST', align: 'right', unit: 'km', visible: true },
+                    // Optional columns - set visible: true to enable
+                    { id: 'time', label: 'TIME', align: 'left', visible: false },
+                    { id: 'mode', label: 'MODE', align: 'left', visible: false },
+                    { id: 'db', label: 'DB', align: 'right', visible: false }
+                ]
+            }
+        },
+        bandSummary: {
+            id: 'band-summary',
+            title: 'Band Activity Summary',
+            display: {
+                maxItems: 12,
+                cycleInterval: 10,
+                showLastUpdate: true,
+                columns: [
+                    { id: 'band', label: 'BAND', align: 'left' },
+                    { id: 'freq', label: 'FREQ', align: 'right' },
+                    { id: 'activity', label: 'ACT', align: 'center' },
+                    { id: 'spots', label: 'SPOTS', align: 'right' }
+                ]
             }
         }
     },

@@ -1,6 +1,4 @@
 import { CONFIG } from '../modules/config.js';
-import { pskReporterConfig } from '../modules/cards/psk-reporter.config.js';
-import { bandSummaryConfig } from '../modules/cards/band-summary.config.js';
 import { updateHeaderInfo } from '../modules/ui.js';
 import { fetchRBNSpots } from '../modules/spots.js';
 import { getRandomQuotes } from '../data/quotes.js';
