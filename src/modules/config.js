@@ -54,12 +54,12 @@ export const CONFIG = {
                 columns: [
                     { id: 'call', label: 'CALL', align: 'left', visible: true },
                     { id: 'freq', label: 'FREQ', align: 'right', visible: true },
-                    { id: 'age', label: 'AGE', align: 'center', visible: true },
+                    { id: 'mode', label: 'MODE', align: 'left', visible: true },
                     { id: 'grid', label: 'GRID', align: 'center', maxDigits: 4, visible: true },
                     { id: 'distance', label: 'DIST', align: 'right', unit: 'km', visible: true },
+                    { id: 'age', label: 'AGE', align: 'center', visible: true },
                     // Optional columns - set visible: true to enable
                     { id: 'time', label: 'TIME', align: 'left', visible: false },
-                    { id: 'mode', label: 'MODE', align: 'left', visible: false },
                     { id: 'db', label: 'DB', align: 'right', visible: false }
                 ]
             }
