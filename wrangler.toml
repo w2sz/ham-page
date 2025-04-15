@@ -8,4 +8,3 @@ routes = ["dash.hisenz.com/*"]
 
 [site]
 bucket = "./src"
-entry-point = "workers"
