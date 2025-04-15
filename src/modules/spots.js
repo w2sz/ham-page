@@ -1,8 +1,6 @@
 import { CONFIG } from './config.js';
-import { getBandName } from './bands.js';
 import { updateTable, showLoading, showError, checkForDX } from './ui.js';
 import { updateBandSummary } from './bands.js';
-import { pskReporterConfig } from './cards/psk-reporter.config.js';
 
 export const spotCache = {
     receptionReport: [],

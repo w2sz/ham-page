@@ -1,23 +1,106 @@
 import { CONFIG } from './config.js';
 import { spotCache } from './spots.js';
+import { formatDate, formatTime } from './utils/formatters.js';
+import { formatCell, getColumnHeader, CardPaginator } from './utils/helpers.js';
+
+class Card {
+    constructor(config) {
+        this.id = config.id;
+        this.title = config.title;
+        this.display = config.display;
+        this.element = document.getElementById(this.id);
+    }
+
+    initialize() {
+        throw new Error('initialize() must be implemented by subclass');
+    }
+
+    update() {
+        throw new Error('update() must be implemented by subclass');
+    }
+
+    render() {
+        throw new Error('render() must be implemented by subclass');
+    }
+}
+
+export class PSKReporterCard extends Card {
+    constructor(config) {
+        super(config);
+        this.lastFetchTime = null;
+        this.currentData = [];
+        console.log('PSKReporterCard initialized with config:', config);
+    }
+
+    initialize() {
+        if (!this.element) {
+            console.error('PSKReporterCard: No element found for id:', this.id);
+            return;
+        }
+        console.log('PSKReporterCard: Initializing element');
+        this.element.innerHTML = `
+            <h2>${this.title}</h2>
+            <div id="qso-list"></div>
+        `;
+    }
+
+    update(data) {
+        if (data) {
+            this.lastFetchTime = new Date();
+            this.currentData = data;
+        }
+        this.render();
+    }
+
+    formatCell(colId, spot, columnConfig) {
+        switch(colId) {
+            case 'age': return formatAge(spot.flowStartSeconds);
+            case 'grid': return formatGrid(spot.grid, columnConfig);
+            case 'distance': return formatDistance(spot.distance, columnConfig);
+            default: return spot[colId] || '';
+        }
+    }
+
+    render() {
+        if (!this.element || !this.currentData?.length) return;
+
+        const content = document.getElementById('qso-list');
+        if (!content) return;
+
+        const { columns } = this.display;
+        content.innerHTML = `
+            <table class="qso-table">
+                <thead>
+                    <tr>
+                        ${columns.map(col => 
+                            `<th data-align="${col.align}">${col.label}</th>`
+                        ).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${this.currentData.slice(0, this.display.itemsPerPage).map(spot => `
+                        <tr>
+                            ${columns.map(col => 
+                                `<td data-align="${col.align}">
+                                    ${this.formatCell(col.id, spot, col)}
+                                </td>`
+                            ).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <div class="spot-update-time">
+                ${this.currentData.length} spots in last 24h
+                <br>
+                Last fetched: ${this.lastFetchTime?.toLocaleTimeString() || 'Never'}
+            </div>
+        `;
+    }
+}
 
 export const updateHeaderInfo = () => {
     const now = new Date();
     const utcNow = new Date(now.toUTCString());
-    
-    const formatDate = (date) => date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    });
-
-    const formatTime = (date, useUTC = false) => date.toLocaleTimeString('en-US', {
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZone: useUTC ? 'UTC' : undefined
-    });
 
     document.getElementById('time-display').innerHTML = `
         <div class="local-time">
@@ -32,167 +115,6 @@ export const updateHeaderInfo = () => {
 
     document.getElementById('callsign').innerText = `${CONFIG.station.callsign}`;
     document.getElementById('gridsquare').innerText = `${CONFIG.station.gridsquare}`;
-};
-
-class CardPaginator {
-    constructor(elementId, items, itemsPerPage) {
-        this.container = document.getElementById(elementId);
-        this.items = items;
-        this.itemsPerPage = itemsPerPage;
-        this.currentPage = 0;
-        this.totalPages = Math.ceil(items.length / itemsPerPage);
-    }
-
-    renderPage() {
-        const start = this.currentPage * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        return this.items.slice(start, end);
-    }
-
-    nextPage() {
-        this.currentPage = (this.currentPage + 1) % this.totalPages;
-        return this.renderPage();
-    }
-}
-
-const formatAge = (timestamp) => {
-    if (!timestamp) {
-        console.error('Missing timestamp for age calculation');
-        return '';
-    }
-    
-    const now = Math.floor(Date.now() / 1000);
-    const diff = now - timestamp;
-    if (isNaN(diff)) return '';
-    
-    if (diff < 60) return 'now';
-    if (diff < 3600) return `${Math.floor(diff / 60)}m`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
-    return `${Math.floor(diff / 86400)}d`;
-};
-
-const formatDistance = (km) => {
-    const distance = parseFloat(km);
-    if (isNaN(distance)) return '';
-    return Math.round(distance).toString();
-};
-
-const formatGrid = (grid, columnConfig) => {
-    if (!grid) return '';
-    const maxDigits = columnConfig?.maxDigits || grid.length;
-    return grid.substring(0, maxDigits);
-};
-
-const formatCell = (cardId, colId, data, colConfig) => {
-    const formatters = {
-        pskReporter: {
-            age: (d) => formatAge(d.flowStartSeconds),
-            grid: (d) => formatGrid(d.grid, colConfig),
-            distance: (d) => formatDistance(d.distance, colConfig)
-        },
-        bandSummary: {
-            activity: (d) => formatActivity(d.activity),
-            spots: (d) => d.spots.toString()
-        }
-    };
-
-    return formatters[cardId]?.[colId]?.(data) ?? data[colId] ?? '';
-};
-
-const getColumnHeader = (col) => {
-    if (col.id === 'distance') {
-        return `DIST ${col.unit.toUpperCase()}`;
-    }
-    return col.label;
-};
-
-const renderSpots = (currentSpots, paginator) => {
-    // Get column config from PSK Reporter card config
-    const { columns } = pskReporterConfig.display;
-    
-    const thead = `
-        <thead>
-            <tr>
-                ${columns.map(col => 
-                    `<th data-align="${col.align}">${col.label}</th>`
-                ).join('')}
-            </tr>
-        </thead>
-        <tbody>
-            ${currentSpots.map(spot => `
-                <tr>
-                    ${columns.map(col => 
-                        `<td data-align="${col.align}">${formatCell('pskReporter', col.id, spot, col)}</td>`
-                    ).join('')}
-                </tr>
-            `).join('')}
-        </tbody>
-    `;
-    return `
-        <table class="qso-table">
-            ${thead}
-        </table>
-        <p>
-            Page ${paginator.currentPage + 1}/${paginator.totalPages}
-        </p>
-        <div class="spot-update-time">
-            ${spotCache.receptionReport.length} spots in last 24h
-            <br>
-            Last updated: ${new Date().toLocaleTimeString()}
-        </div>
-    `;
-};
-
-// Add to window for button onclick access
-window.toggleTableConfig = () => {
-    const dialog = document.createElement('dialog');
-    dialog.className = 'config-dialog';
-    const columns = CONFIG.display.table.columns;
-    
-    dialog.innerHTML = `
-        <form method="dialog">
-            <h3>Table Configuration</h3>
-            ${Object.entries(columns).map(([key, config]) => `
-                <label>
-                    <input type="checkbox" 
-                           name="${key}" 
-                           ${config.enabled ? 'checked' : ''}>
-                    ${config.label}
-                </label>
-            `).join('')}
-            <label>
-                Grid Digits:
-                <select name="gridDigits">
-                    ${[2,4,6].map(n => `
-                        <option value="${n}" ${columns.grid.maxDigits === n ? 'selected' : ''}>
-                            ${n}
-                        </option>
-                    `).join('')}
-                </select>
-            </label>
-            <label>
-                Distance Unit:
-                <select name="distanceUnit">
-                    <option value="km" ${columns.distance.unit === 'km' ? 'selected' : ''}>Kilometers</option>
-                    <option value="mi" ${columns.distance.unit === 'mi' ? 'selected' : ''}>Miles</option>
-                </select>
-            </label>
-            <button type="submit">Save</button>
-        </form>
-    `;
-
-    dialog.addEventListener('close', () => {
-        const formData = new FormData(dialog.querySelector('form'));
-        Object.keys(columns).forEach(key => {
-            columns[key].enabled = formData.has(key);
-        });
-        columns.grid.maxDigits = parseInt(formData.get('gridDigits'));
-        columns.distance.unit = formData.get('distanceUnit');
-        updateTable(spotCache.receptionReport);
-    });
-
-    document.body.appendChild(dialog);
-    dialog.showModal();
 };
 
 export class CardManager {

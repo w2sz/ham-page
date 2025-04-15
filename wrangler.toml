@@ -3,7 +3,7 @@ main = "workers/index.js"
 compatibility_date = "2025-04-15"
 
 # Configuration for the production environment
-workers_dev = false
+workers_dev = true
 routes = ["dash.hisenz.com/*"]
 
 [site]
