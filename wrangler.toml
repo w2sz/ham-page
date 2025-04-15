@@ -1,7 +1,11 @@
 name = "ham-page"
-main = "src/index.js"
+main = "workers/index.js"
 compatibility_date = "2025-04-15"
 
 # Configuration for the production environment
 workers_dev = false
 routes = ["dash.hisenz.com/*"]
+
+[site]
+bucket = "./src"
+entry-point = "workers"

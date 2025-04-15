@@ -24,6 +24,7 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "wrangler": "^4.11.0"
+    "wrangler": "^4.11.0",
+    "@cloudflare/kv-asset-handler": "^0.3.0"
   }
 }
