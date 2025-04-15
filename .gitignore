@@ -1,0 +1,79 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Distribution directories
+dist/
+build/
+out/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Coverage directories
+coverage/
+.nyc_output/
+
+# Cache directories
+.npm/
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# IDE and editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.directory
+.project
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Compiled JavaScript files
+*.js.map
+*.min.js
+
+# Lock files (depending on your preference)
+# package-lock.json
+# yarn.lock
+
+# Logs
+logs/
+*.log
+
+# Local development server files
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+
+# TypeScript files
+*.tsbuildinfo
+
+# Optional: Production bundles (adjust based on your build process)
+# *.bundle.js
