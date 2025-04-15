@@ -1,0 +1,26 @@
+name = "ham-page"
+main = "src/index.js"
+compatibility_date = "2025-04-15"
+
+[site]
+bucket = "./dist"
+entry-point = "workers-site"
+
+[build]
+command = "npm run build"
+watch_dir = "src"
+
+[env.production]
+workers_dev = false
+# Add your production domain here if you have one
+# route = "example.com/*"
+
+[env.staging]
+workers_dev = true
+# Add your staging domain here if you have one
+# route = "staging.example.com/*"
+
+# Bind resources like KV, Durable Objects, R2, etc. as needed
+# [[kv_namespaces]]
+# binding = "MY_KV"
+# id = "your-kv-id-here"
