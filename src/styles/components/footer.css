@@ -1,0 +1,26 @@
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    background: var(--bg-darker);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#quote {
+    font-style: italic;
+    color: var(--text-primary);
+    opacity: 0.8;
+    font-size: var(--font-size-small);
+    transition: opacity 0.5s;
+    height: 3em;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0 var(--spacing-lg);
+}

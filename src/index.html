@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ham Page</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body data-theme="dark">
+    <header>
+        <div id="header-info">
+            <span id="callsign"></span>
+            <span id="gridsquare"></span>
+            <div id="time-display"></div>
+        </div>
+        <!-- <div id="clock-display"></div> -->
+    </header>
+    <main>
+        <div class="cards-container">
+            <div class="card" id="psk-reporter">
+                <h2>PSK Reporter</h2>
+                <div id="qso-list"></div>
+            </div>
+            <div class="card" id="band-summary">
+                <h2>Band Activity Summary</h2>
+                <div id="band-summary-content"></div>
+            </div>
+        </div>
+        <div id="dx-alerts"></div>
+    </main>
+    <footer>
+        <div id="quote"></div>
+    </footer>
+    <script type="module" src="scripts/app.js"></script>
+</body>
+</html>

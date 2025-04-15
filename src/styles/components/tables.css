@@ -1,0 +1,50 @@
+.qso-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-sm);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-base);
+}
+
+.qso-table th {
+    background-color: var(--bg-dark);
+    color: var(--accent);
+    padding: var(--spacing-sm);
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    letter-spacing: 0.05em;
+}
+
+.qso-table td {
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    transition: transform 0.2s ease;
+}
+
+.qso-table tr {
+    animation: fadeIn 0.3s ease-out;
+    animation-fill-mode: both;
+}
+
+.qso-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.qso-table tr:nth-child(odd) {
+    background-color: var(--bg-darker);
+}
+
+.qso-table tr:hover {
+    background-color: var(--accent) !important;
+    color: var(--bg-darker);
+}
+
+.spot-update-time {
+    margin-top: var(--spacing-lg);
+    text-align: right;
+    font-size: var(--font-size-small);
+    color: var(--text-secondary);
+}

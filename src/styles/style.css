@@ -1,0 +1,18 @@
+@import 'theme.css';
+@import 'animations.css';
+@import 'components/header.css';
+@import 'components/tables.css';
+@import 'components/cards.css';
+@import 'components/footer.css';
+@import 'components/loading.css';
+
+/* Responsive */
+@media screen and (min-width: 1920px) {
+    body {
+        font-size: calc(1vw + 0.5vh);
+    }
+    
+    .card {
+        max-width: 95vw;
+    }
+}

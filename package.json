@@ -1,0 +1,26 @@
+{
+  "name": "ham-radio-dashboard",
+  "version": "1.0.0",
+  "description": "A modern dashboard for ham radio operations",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "serve src",
+    "dev": "serve src -l 3000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ham-radio",
+    "dashboard",
+    "amateur-radio",
+    "psk-reporter"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
