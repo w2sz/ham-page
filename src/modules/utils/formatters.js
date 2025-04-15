@@ -4,13 +4,20 @@ export const formatDate = (date) => date.toLocaleDateString('en-US', {
     day: '2-digit'
 });
 
-export const formatTime = (date, useUTC = false) => date.toLocaleTimeString('en-US', {
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    timeZone: useUTC ? 'UTC' : undefined
-});
+export const formatTime = (date, useUTC = false) => {
+    const options = {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+    
+    if (useUTC) {
+        return `${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}:${String(date.getUTCSeconds()).padStart(2, '0')}`;
+    }
+    
+    return date.toLocaleTimeString('en-US', options);
+};
 
 export const formatAge = (timestamp) => {
     if (!timestamp) {

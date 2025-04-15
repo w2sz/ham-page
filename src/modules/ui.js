@@ -1,7 +1,6 @@
 import { CONFIG } from './config.js';
-import { spotCache } from './spots.js';
 import { formatDate, formatTime } from './utils/formatters.js';
-import { formatCell, getColumnHeader, CardPaginator } from './utils/helpers.js';
+import { formatCell} from './utils/helpers.js';
 
 class Card {
     constructor(config) {
@@ -100,17 +99,13 @@ export class PSKReporterCard extends Card {
 
 export const updateHeaderInfo = () => {
     const now = new Date();
-    const utcNow = new Date(now.toUTCString());
 
     document.getElementById('time-display').innerHTML = `
-        <div class="local-time">
-            <span class="date">${formatDate(now)}</span>
-            <span class="time">Local: ${formatTime(now)}</span>
+        <div class="time-item local-time">
+            <div>${formatDate(now)}</div>
+            <div>${formatTime(now)}</div>
         </div>
-        <div class="utc-time">
-            <span class="date">${formatDate(utcNow)}</span>
-            <span class="time">UTC: ${formatTime(now, true)}</span>
-        </div>
+        <div class="time-item utc-time">UTC: ${formatTime(now, true)}</div>
     `;
 
     document.getElementById('callsign').innerText = `${CONFIG.station.callsign}`;

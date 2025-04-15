@@ -19,27 +19,21 @@ header {
 
 #time-display {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-lg);
-    font-size: var(--font-size-small);
-    position: relative;
+    font-size: var(--font-size-large);
 }
 
-#time-display .local-time,
-#time-display .utc-time {
+#time-display .time-item {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
-#time-display .local-time::after {
-    display: none; /* Remove the divider */
-}
-
-#time-display .date {
-    color: var(--text-secondary);
-    font-size: 0.9em;
+#time-display .local-time {
+    /* color: var(--text-secondary); */
+    display: flex;
+    gap: var(--spacing-md);
 }
 
 #time-display .utc-time {
