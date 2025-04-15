@@ -4,7 +4,13 @@ compatibility_date = "2025-04-15"
 
 [site]
 bucket = "./dist"
-entry-point = "workers-site"
+
+[env.production]
+workers_dev = false
+route = "dash.hisenz.com/*"
+
+[env.staging]
+workers_dev = true
 
 [build]
 command = "npm run build"
