@@ -5,7 +5,3 @@ compatibility_date = "2025-04-15"
 # Configuration for the production environment
 workers_dev = false
 routes = ["dash.hisenz.com/*"]
-
-[build]
-command = "npm run build"
-watch_dir = "src"
