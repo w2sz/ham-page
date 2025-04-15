@@ -5,7 +5,6 @@ export const CONFIG = {
         operator: "KD2TAI"
     },
     display: {
-        maxSpots: 25,
         refreshInterval: 300,
         timeFormat: 'UTC',
         dxThreshold: 5000,
@@ -28,13 +27,8 @@ export const CONFIG = {
             }
         },
         quotes: {
-            updateInterval: 30, // seconds
-            fadeTime: 500 // ms
-        },
-        cards: {
-            itemsPerPage: 15, // Increased from 10
-            cycleInterval: 10, // seconds between page changes
-            transitionTime: 500 // ms for fade transition
+            updateInterval: 30,
+            fadeTime: 500
         },
         layout: {
             slots: 4,
@@ -56,8 +50,6 @@ export const CONFIG = {
             id: 'psk-reporter',
             title: 'PSK Reporter',
             display: {
-                maxItems: 15,
-                cycleInterval: 10,
                 showLastUpdate: true,
                 columns: [
                     { id: 'call', label: 'CALL', align: 'left', visible: true },
@@ -76,8 +68,6 @@ export const CONFIG = {
             id: 'band-summary',
             title: 'Band Activity Summary',
             display: {
-                maxItems: 12,
-                cycleInterval: 10,
                 showLastUpdate: true,
                 columns: [
                     { id: 'band', label: 'BAND', align: 'left' },

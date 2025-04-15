@@ -77,7 +77,7 @@ export class PSKReporterCard extends Card {
                     </tr>
                 </thead>
                 <tbody>
-                    ${this.currentData.slice(0, this.display.itemsPerPage).map(spot => `
+                    ${this.currentData.map(spot => `
                         <tr>
                             ${columns.map(col => 
                                 `<td data-align="${col.align}">
@@ -128,7 +128,7 @@ export class CardManager {
                     ).join('')}</tr>
                 </thead>
                 <tbody>
-                    ${data.slice(0, config.display.maxItems).map(item => `
+                    ${data.map(item => `
                         <tr>${visibleColumns.map(col => 
                             `<td data-align="${col.align}">${formatCell(cardId, col.id, item, col)}</td>`
                         ).join('')}</tr>

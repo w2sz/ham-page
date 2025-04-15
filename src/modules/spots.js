@@ -76,19 +76,16 @@ export const extractSpotData = (data) => {
         .filter(spot => spot.flowStartSeconds > oneDayAgo)
         .sort((a, b) => b.flowStartSeconds - a.flowStartSeconds);
     
-    return spotCache.receptionReport.map(spot => {
-        const processed = {
-            time: new Date(spot.flowStartSeconds * 1000).toUTCString().split(' ')[4] + 'z',
-            freq: spot.frequency.toFixed(3),
-            call: spot.receiverCallsign,
-            mode: spot.mode,
-            db: spot.sNR,
-            grid: spot.receiverLocator,
-            distance: Math.round(parseFloat(spot.distance)),
-            flowStartSeconds: spot.flowStartSeconds
-        };
-        return processed;
-    });
+    return spotCache.receptionReport.map(spot => ({
+        time: new Date(spot.flowStartSeconds * 1000).toUTCString().split(' ')[4] + 'z',
+        freq: spot.frequency.toFixed(3),
+        call: spot.receiverCallsign,
+        mode: spot.mode,
+        db: spot.sNR,
+        grid: spot.receiverLocator,
+        distance: Math.round(parseFloat(spot.distance)),
+        flowStartSeconds: spot.flowStartSeconds
+    }));
 };
 
 const fetchWithTimeout = async (url, options = {}, timeout = 10000) => {

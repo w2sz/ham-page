@@ -23,29 +23,15 @@ const updateQuote = async () => {
     if (!quoteElement) return;
     
     const [quote] = getRandomQuotes(1);
-    const newQuote = document.createElement('div');
-    newQuote.className = 'quote-text';
-    newQuote.innerHTML = `"${quote.text}" - ${quote.author}`;
-    
-    const oldQuote = quoteElement.querySelector('.quote-text');
-    if (oldQuote) {
-        oldQuote.classList.add('quote-exit');
-        newQuote.classList.add('quote-enter');
-        await new Promise(resolve => setTimeout(resolve, 500));
-        oldQuote.remove();
-    }
-    
-    quoteElement.appendChild(newQuote);
+    quoteElement.innerHTML = `"${quote.text}" - ${quote.author}`;
 };
 
 const initLayout = () => {
     const root = document.documentElement;
     root.style.setProperty('--grid-slots', CONFIG.display.layout.slots);
 
-    // Get layout config for each card
     const cardLayouts = CONFIG.display.layout.grid.cards;
     
-    // Apply layout to each card
     Object.entries(cardLayouts).forEach(([cardId, layout]) => {
         const card = document.getElementById(cardId);
         if (card) {
@@ -65,7 +51,6 @@ const init = () => {
     setInterval(fetchRBNSpots, CONFIG.display.refreshInterval * 1000);
     initScreenSaver();
     updateQuote();
-    setInterval(updateQuote, 30000);
 };
 
 document.addEventListener('DOMContentLoaded', init);

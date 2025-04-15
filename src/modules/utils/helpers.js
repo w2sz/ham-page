@@ -22,24 +22,3 @@ export const getColumnHeader = (col) => {
     }
     return col.label;
 };
-
-export class CardPaginator {
-    constructor(elementId, items, itemsPerPage) {
-        this.container = document.getElementById(elementId);
-        this.items = items;
-        this.itemsPerPage = itemsPerPage;
-        this.currentPage = 0;
-        this.totalPages = Math.ceil(items.length / itemsPerPage);
-    }
-
-    renderPage() {
-        const start = this.currentPage * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        return this.items.slice(start, end);
-    }
-
-    nextPage() {
-        this.currentPage = (this.currentPage + 1) % this.totalPages;
-        return this.renderPage();
-    }
-}
