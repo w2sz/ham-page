@@ -204,14 +204,3 @@ export const showError = (message) => {
         </div>
     `;
 };
-
-export const checkForDX = (spots) => {
-    const newDX = spots.find(spot => spot.distance > CONFIG.display.dxThreshold);
-    if (newDX) {
-        const alert = document.createElement('div');
-        alert.className = 'dx-alert';
-        alert.textContent = `DX Alert! ${newDX.call} at ${newDX.distance}km on ${newDX.freq}MHz!`;
-        document.getElementById('dx-alerts').prepend(alert);
-        setTimeout(() => alert.remove(), 5000);
-    }
-};

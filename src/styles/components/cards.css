@@ -3,7 +3,7 @@
     grid-template-columns: repeat(var(--grid-slots, 4), 1fr);
     gap: 1vh;
     padding: 1vh;
-    height: calc(100vh - 60px - 40px); /* Viewport height minus header and footer */
+    /* height: calc(100vh - var(--header-height) - var(--footer-height)); */
     width: 100%;
 }
 

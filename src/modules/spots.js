@@ -1,5 +1,5 @@
 import { CONFIG } from './config.js';
-import { updateTable, showLoading, showError, checkForDX } from './ui.js';
+import { updateTable, showLoading, showError} from './ui.js';
 import { updateBandSummary } from './bands.js';
 
 export const spotCache = {
@@ -132,7 +132,6 @@ export const fetchRBNSpots = async () => {
                 if (spots?.length > 0) {
                     updateTable(spots);
                     updateBandSummary(spots);
-                    checkForDX(spots);
                     return spots;
                 }
             } catch (error) {

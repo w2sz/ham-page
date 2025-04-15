@@ -17,12 +17,12 @@
     --spacing-md: clamp(1rem, 1.5vw, 2rem);
     --spacing-lg: clamp(1.5rem, 2vw, 3rem);
     --font-size-base: clamp(0.8rem, 1vw, 1.6rem);
-    --font-size-large: clamp(1rem, 1.6vw, 2rem);
-    --font-size-small: clamp(0.5rem, 0.8vw, 1.2rem);
+    --font-size-large: clamp(1.4rem, 1.6vw, 2rem);
+    --font-size-small: clamp(0.7rem, 0.8vw, 1.2rem);
 
     /* Common component styles */
-    --header-height: 60px;
-    --footer-height: 40px;
+    --header-height: 6vh;
+    --footer-height: 4vh;
     --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     --transition-speed: 0.2s;
 
