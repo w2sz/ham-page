@@ -1,8 +1,43 @@
 import { CONFIG } from '../modules/config.js';
 import { updateHeaderInfo } from '../modules/ui.js';
-import { fetchRBNSpots } from '../modules/spots.js';
+import { fetchSpotData } from '../modules/api/pskReporter.js';
+import { parseADIF } from '../modules/data/pskReporter.js';
+import { PagedTable } from '../modules/components/PagedTable.js';
 import { getRandomQuotes } from '../data/quotes.js';
 import { updateBandSummary } from '../modules/bands.js';
+import { spotStatus, getStatusHTML } from '../modules/api/pskReporter.js';
+
+let spotTable = null;
+
+async function updateSpots() {
+    if (!spotTable) return;
+    
+    try {
+        spotTable.setLoading(true);
+        const adifText = await fetchSpotData();
+        
+        if (!adifText) {
+            throw new Error('No data received');
+        }
+        
+        const spots = parseADIF(adifText)
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .map(spot => ({
+                ...spot,
+                freq: parseFloat(spot.freq).toFixed(3),
+                distance: Math.round(parseFloat(spot.distance)),
+                time: spot.time.replace(/(\d{2})(\d{2})(\d{2})/, '$1:$2:$3')
+            }));
+            
+        spotTable.setData(spots);
+        
+    } catch (error) {
+        console.error('Failed to update spots:', error);
+        spotTable.setData([]);
+    } finally {
+        spotTable.setLoading(false);
+    }
+}
 
 const initScreenSaver = () => {
     let timeout;
@@ -45,12 +80,22 @@ const init = () => {
     initLayout();
     updateHeaderInfo();
     setInterval(updateHeaderInfo, 1000);
-    fetchRBNSpots().then(spots => {
-        if (spots) updateBandSummary(spots);
+
+    // Initialize spot table
+    spotTable = new PagedTable('qso-list', {
+        pageSize: 20,
+        columns: CONFIG.cards.pskReporter.display.columns,
+        statusProvider: getStatusHTML,
+        autoCycle: true
     });
-    setInterval(fetchRBNSpots, CONFIG.display.refreshInterval * 1000);
+    
+    // Start data updates
+    updateSpots();
+    setInterval(updateSpots, CONFIG.display.refreshInterval * 1000);
+    
     initScreenSaver();
     updateQuote();
+    setInterval(updateQuote, CONFIG.display.quotes.updateInterval * 1000);
 };
 
 document.addEventListener('DOMContentLoaded', init);
