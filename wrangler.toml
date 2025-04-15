@@ -2,9 +2,6 @@ name = "ham-page"
 main = "src/index.js"
 compatibility_date = "2025-04-15"
 
-[site]
-bucket = "./dist"
-
 # Configuration for the production environment
 workers_dev = false
 routes = ["dash.hisenz.com/*"]
