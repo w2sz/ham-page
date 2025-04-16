@@ -90,7 +90,7 @@ const init = () => {
 
     // Initialize spot table
     spotTable = new PagedTable('spotter-list', {
-        pageSize: 22,
+        pageSize: 20,
         columns: CONFIG.cards.pskReporter.display.columns,
         autoCycle: true
     });

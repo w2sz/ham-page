@@ -48,7 +48,7 @@ export class CardManager {
 
 export const updateTable = (spots) => {
     const element = document.getElementById('spotter-list');
-    const pageSize = 22;
+    const pageSize = 20;
     let currentPage = 0;
     let autoCycleInterval = null;
     let lastFetchTime = new Date();
