@@ -1,3 +1,5 @@
+import { formatTime, formatGrid, formatAge } from '../utils/formatters.js';
+
 export const spotCache = {
     receptionReport: [],
     lastUpdate: 0
@@ -26,24 +28,25 @@ export function parseADIF(adifText) {
                 'T' + 
                 spot.time_on.replace(/(\d{2})(\d{2})(\d{2})/, '$1:$2:$3') + 
                 'Z'
-            ).getTime();
-            
+            ).getTime() / 1000;
+
+            // Format data at parse time
             spots.push({
-                time: spot.time_on,
-                call: spot.operator || '',
-                freq: parseFloat(spot.freq) || 0,
+                timestamp: timestamp,
+                time: formatTime(new Date(timestamp * 1000), true),
+                call: spot.operator?.toUpperCase() || '',
+                freq: parseFloat(spot.freq).toFixed(3),
                 mode: spot.mode || '',
-                grid: spot.my_gridsquare || '',
-                distance: spot.distance || '0',
-                db: spot.app_pskrep_snr || '0',
-                timestamp
+                grid: formatGrid(spot.my_gridsquare || '', { maxDigits: 4 }),
+                db: spot.app_pskrep_snr ? `${spot.app_pskrep_snr}` : '?',
+                distance: spot.distance ? `${Math.round(parseFloat(spot.distance))}` : '?',
+                age: formatAge(timestamp)  // Add formatted age
             });
         }
     }
     
     return spots;
 }
-
 
 export function processSpotData(data) {
     if (!data || !Array.isArray(data.receptionReport)) {
@@ -78,6 +81,7 @@ function formatSpots(spots) {
         db: spot.sNR,
         grid: spot.receiverLocator,
         distance: Math.round(parseFloat(spot.distance)),
-        flowStartSeconds: spot.flowStartSeconds
+        flowStartSeconds: spot.flowStartSeconds,
+        timestamp: spot.timestamp || Date.now() / 1000  // Ensure timestamp is available
     }));
 }

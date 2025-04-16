@@ -34,7 +34,7 @@ export const updateBandSummary = async (spots) => {
     }, {});
 
     const summaryHTML = `
-        <table class="qso-table">
+        <table class="paged-table">
             <thead>
                 <tr>
                     <th>Band</th>

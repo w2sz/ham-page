@@ -8,7 +8,6 @@ export class PagedTable {
         this.columns = options.columns || [];
         this.onUpdate = options.onUpdate;
         this.isLoading = false;
-        this.statusProvider = options.statusProvider;
         if (options.autoCycle) {
             setTimeout(() => this.startAutoCycle(), 0);
         }
@@ -46,29 +45,35 @@ export class PagedTable {
             return;
         }
 
-        const totalPages = Math.ceil(this.data.length / this.pageSize);
-        const start = this.currentPage * this.pageSize;
-        const end = start + this.pageSize;
+        // Filter columns based on visibility
+        const visibleColumns = this.columns.filter(col => col.visible !== false);
+
+        // Ensure we have valid numbers to prevent NaN
+        const dataLength = Array.isArray(this.data) ? this.data.length : 0;
+        const pageSize = this.pageSize > 0 ? this.pageSize : 1;
+        
+        const totalPages = Math.max(1, Math.ceil(dataLength / pageSize));
+        const start = this.currentPage * pageSize;
+        const end = start + pageSize;
         const pageData = this.data.slice(start, end);
 
         const content = document.createElement('div');
         content.innerHTML = `
-            <table class="qso-table">
+            <table class="paged-table">
                 <thead>
-                    <tr>${this.columns.map(col => 
+                    <tr>${visibleColumns.map(col => 
                         `<th data-align="${col.align}">${col.label}</th>`
                     ).join('')}</tr>
                 </thead>
                 <tbody>
                     ${pageData.map(item => `
-                        <tr>${this.columns.map(col => 
+                        <tr>${visibleColumns.map(col => 
                             `<td data-align="${col.align}">${this.formatCell(col, item)}</td>`
                         ).join('')}</tr>
                     `).join('')}
                 </tbody>
             </table>
             ${this.renderPaginationControls(totalPages)}
-            ${this.statusProvider ? this.statusProvider() : ''}
         `;
 
         this.element.replaceChildren(content);
@@ -80,24 +85,48 @@ export class PagedTable {
     }
 
     renderPaginationControls(totalPages) {
+        // Ensure all values are valid to prevent NaN errors
+        const validTotalPages = isNaN(totalPages) || totalPages < 1 ? 1 : totalPages;
+        const validCurrentPage = isNaN(this.currentPage) ? 0 : this.currentPage;
+        const displayPage = validCurrentPage + 1;
+        
         return `
-            <div class="pagination-controls">
-                <button id="prev-page" ${this.currentPage === 0 ? 'disabled' : ''}>&lt;</button>
+            <br>
+            <div class="pagination-controls" align="center">
+                <button id="first-page" ${validCurrentPage === 0 ? 'disabled' : ''}>|&lt;</button>
+                <button id="prev-page" ${validCurrentPage === 0 ? 'disabled' : ''}>&lt;</button>
                 <span>Page</span>
-                <input id="page-input" type="number" min="1" max="${totalPages}" value="${this.currentPage + 1}" />
-                <span>/ ${totalPages}</span>
-                <button id="next-page" ${(this.currentPage + 1) >= totalPages ? 'disabled' : ''}>&gt;</button>
+                <input id="page-input" type="number" min="1" max="${validTotalPages}" value="${displayPage}" />
+                <span>/ ${validTotalPages}</span>
+                <button id="next-page" ${displayPage >= validTotalPages ? 'disabled' : ''}>&gt;</button>
+                <button id="last-page" ${displayPage >= validTotalPages ? 'disabled' : ''}>&gt;|</button>
                 <button id="auto-cycle">${this.autoCycleInterval ? 'Stop' : 'Auto'}</button>
             </div>
+            <br>
         `;
     }
 
     attachEventListeners() {
         const prevButton = this.element.querySelector('#prev-page');
         const nextButton = this.element.querySelector('#next-page');
+        const firstButton = this.element.querySelector('#first-page');
+        const lastButton = this.element.querySelector('#last-page');
         const pageInput = this.element.querySelector('#page-input');
         const autoButton = this.element.querySelector('#auto-cycle');
-        const totalPages = Math.ceil(this.data.length / this.pageSize);
+        
+        // Ensure we have valid numbers to prevent NaN
+        const dataLength = Array.isArray(this.data) ? this.data.length : 0;
+        const pageSize = this.pageSize > 0 ? this.pageSize : 1;
+        const totalPages = Math.max(1, Math.ceil(dataLength / pageSize));
+
+        if (firstButton) {
+            firstButton.addEventListener('click', () => {
+                if (this.currentPage > 0) {
+                    this.currentPage = 0;
+                    this.render();
+                }
+            });
+        }
 
         if (prevButton) {
             prevButton.addEventListener('click', () => {
@@ -112,6 +141,15 @@ export class PagedTable {
             nextButton.addEventListener('click', () => {
                 if (this.currentPage < totalPages - 1) {
                     this.currentPage++;
+                    this.render();
+                }
+            });
+        }
+
+        if (lastButton) {
+            lastButton.addEventListener('click', () => {
+                if (this.currentPage < totalPages - 1) {
+                    this.currentPage = totalPages - 1;
                     this.render();
                 }
             });
@@ -152,10 +190,20 @@ export class PagedTable {
     startAutoCycle() {
         if (this.autoCycleInterval) return;
         this.autoCycleInterval = setInterval(() => {
-            const totalPages = Math.ceil(this.data.length / this.pageSize);
-            this.currentPage = (this.currentPage + 1) % totalPages;
+            // Ensure we have valid numbers to prevent NaN
+            const dataLength = Array.isArray(this.data) ? this.data.length : 0;
+            const pageSize = this.pageSize > 0 ? this.pageSize : 1;
+            const totalPages = Math.max(1, Math.ceil(dataLength / pageSize));
+            
+            // Ensure currentPage is valid
+            if (isNaN(this.currentPage)) {
+                this.currentPage = 0;
+            } else {
+                this.currentPage = (this.currentPage + 1) % totalPages;
+            }
+            
             this.render();
-        }, 5000);
+        }, 8000);
     }
 
     stopAutoCycle() {

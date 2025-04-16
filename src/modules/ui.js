@@ -2,101 +2,6 @@ import { CONFIG } from './config.js';
 import { formatDate, formatTime } from './utils/formatters.js';
 import { formatCell} from './utils/helpers.js';
 
-class Card {
-    constructor(config) {
-        this.id = config.id;
-        this.title = config.title;
-        this.display = config.display;
-        this.element = document.getElementById(this.id);
-    }
-
-    initialize() {
-        throw new Error('initialize() must be implemented by subclass');
-    }
-
-    update() {
-        throw new Error('update() must be implemented by subclass');
-    }
-
-    render() {
-        throw new Error('render() must be implemented by subclass');
-    }
-}
-
-export class PSKReporterCard extends Card {
-    constructor(config) {
-        super(config);
-        this.lastFetchTime = null;
-        this.currentData = [];
-        console.log('PSKReporterCard initialized with config:', config);
-    }
-
-    initialize() {
-        if (!this.element) {
-            console.error('PSKReporterCard: No element found for id:', this.id);
-            return;
-        }
-        console.log('PSKReporterCard: Initializing element');
-        this.element.innerHTML = `
-            <h2>${this.title}</h2>
-            <div id="qso-list"></div>
-        `;
-    }
-
-    update(data) {
-        if (data) {
-            this.lastFetchTime = new Date();
-            this.currentData = data;
-        }
-        this.render();
-    }
-
-    formatCell(colId, spot, columnConfig) {
-        switch(colId) {
-            case 'age': return formatAge(spot.flowStartSeconds);
-            case 'grid': return formatGrid(spot.grid, columnConfig);
-            case 'distance': return formatDistance(spot.distance, columnConfig);
-            default: return spot[colId] || '';
-        }
-    }
-
-    render() {
-        if (!this.element || !this.currentData?.length) return;
-
-        const content = document.getElementById('qso-list');
-        if (!content) return;
-
-        const { columns } = this.display;
-        content.innerHTML = `
-            <table class="qso-table">
-                <thead>
-                    <tr>
-                        ${columns.map(col => 
-                            `<th data-align="${col.align}">${col.label}</th>`
-                        ).join('')}
-                    </tr>
-                </thead>
-                <tbody>
-                    ${this.currentData.map(spot => `
-                        <tr>
-                            ${columns.map(col => 
-                                `<td data-align="${col.align}">
-                                    ${this.formatCell(col.id, spot, col)}
-                                </td>`
-                            ).join('')}
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-            <div class="spot-update-time">
-                ${this.currentData.length} spots in last 24h
-                <br>
-                Last fetched: ${this.lastFetchTime?.toLocaleTimeString() || 'Never'}
-            </div>
-        `;
-    }
-}
-
 export const updateHeaderInfo = () => {
     const now = new Date();
 
@@ -121,7 +26,7 @@ export class CardManager {
         
         const content = document.createElement('div');
         content.innerHTML = `
-            <table class="qso-table">
+            <table class="paged-table">
                 <thead>
                     <tr>${visibleColumns.map(col => 
                         `<th data-align="${col.align}">${col.label}</th>`
@@ -142,8 +47,8 @@ export class CardManager {
 }
 
 export const updateTable = (spots) => {
-    const element = document.getElementById('qso-list');
-    const pageSize = 20;
+    const element = document.getElementById('spotter-list');
+    const pageSize = 22;
     let currentPage = 0;
     let autoCycleInterval = null;
     let lastFetchTime = new Date();
@@ -239,52 +144,4 @@ export const updateTable = (spots) => {
     renderPage();
     startCountdown();
     startAutoCycle(); // Enable auto-cycle by default
-};
-
-export const startCountdown = () => {
-    let countdown = CONFIG.display.refreshInterval;
-    const countdownElement = document.getElementById('refresh-countdown');
-    
-    const timer = setInterval(() => {
-        countdown--;
-        if (countdownElement) {
-            countdownElement.textContent = countdown;
-        }
-        if (countdown <= 0) {
-            clearInterval(timer);
-        }
-    }, 1000);
-};
-
-export const showLoading = () => {
-    const qsoListElement = document.getElementById('qso-list');
-    if (!qsoListElement) return;
-    
-    qsoListElement.classList.add('loading-state');
-    qsoListElement.innerHTML = `
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Connecting to PSK Reporter...</p>
-        </div>
-    `;
-};
-
-export const updateLoadingStatus = (status) => {
-    const statusElement = document.querySelector('.loading-status');
-    if (statusElement) {
-        statusElement.textContent = status;
-    }
-};
-
-export const showError = (message) => {
-    const qsoListElement = document.getElementById('qso-list');
-    if (!qsoListElement) return;
-    
-    qsoListElement.classList.remove('loading-state');
-    qsoListElement.innerHTML = `
-        <div class="error">
-            <p>${message}</p>
-            <button onclick="window.location.reload()">Retry</button>
-        </div>
-    `;
 };

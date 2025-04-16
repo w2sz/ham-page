@@ -33,7 +33,7 @@
     grid-row: span 1;
 }
 
-.qso-table {
+.paged-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1vh;
@@ -42,13 +42,13 @@
 }
 
 /* Reset any existing column styles first */
-.qso-table td,
-.qso-table th {
+.paged-table td,
+.paged-table th {
     text-align: left;
     padding: calc(var(--spacing-sm) * 0.3);
 }
 
-.qso-table th {
+.paged-table th {
     background-color: var(--bg-dark);
     color: var(--accent);
     border-bottom: 2px solid var(--border-color);
@@ -56,62 +56,62 @@
     white-space: nowrap;
 }
 
-.qso-table td {
+.paged-table td {
     border-bottom: 1px solid var(--border-color);
     white-space: nowrap;
 }
 
 /* Column specific widths and alignments */
-.qso-table td:nth-child(1), /* Call */
-.qso-table th:nth-child(1) {
+.paged-table td:nth-child(1), /* Call */
+.paged-table th:nth-child(1) {
     width: 6ch;
     text-align: right;
 }
 
-.qso-table td:nth-child(2), /* Freq */
-.qso-table th:nth-child(2) {
+.paged-table td:nth-child(2), /* Freq */
+.paged-table th:nth-child(2) {
     width: 7ch;
     text-align: left;
 }
 
-.qso-table td:nth-child(3), /* Age */
-.qso-table th:nth-child(3) {
+.paged-table td:nth-child(3), /* Age */
+.paged-table th:nth-child(3) {
     width: 3ch;
     text-align: center;
 }
 
 /* Update column widths */
-.qso-table td:nth-child(4) { width: 4ch; }  /* dB */
-.qso-table td:nth-child(5) { width: 6ch; }  /* Call */
-.qso-table td:nth-child(6) { width: 6ch; }  /* Grid */
-.qso-table td:nth-child(7) { width: 6ch; }  /* Distance */
+.paged-table td:nth-child(4) { width: 4ch; }  /* dB */
+.paged-table td:nth-child(5) { width: 6ch; }  /* Call */
+.paged-table td:nth-child(6) { width: 6ch; }  /* Grid */
+.paged-table td:nth-child(7) { width: 6ch; }  /* Distance */
 
-.qso-table tr:nth-child(even) {
+.paged-table tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.03);
 }
 
-.qso-table tr:nth-child(odd) {
+.paged-table tr:nth-child(odd) {
     background-color: var(--bg-darker);
 }
 
-.qso-table tr:hover {
+.paged-table tr:hover {
     background-color: var(--accent);
     color: var(--bg-darker);
 }
 
 /* Generate alignment classes */
-.qso-table td[data-align="left"],
-.qso-table th[data-align="left"] {
+.paged-table td[data-align="left"],
+.paged-table th[data-align="left"] {
     text-align: left;
 }
 
-.qso-table td[data-align="center"],
-.qso-table th[data-align="center"] {
+.paged-table td[data-align="center"],
+.paged-table th[data-align="center"] {
     text-align: center;
 }
 
-.qso-table td[data-align="right"],
-.qso-table th[data-align="right"] {
+.paged-table td[data-align="right"],
+.paged-table th[data-align="right"] {
     text-align: right;
 }
 

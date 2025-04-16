@@ -67,11 +67,10 @@ export function getStatusHTML() {
 
     return `
         <div class="status-text">
-            <span>Total spots: ${spotStatus.totalSpots}</span>
-            <span class="divider">|</span>
-            <span>Last update: ${spotStatus.lastUpdate?.toLocaleTimeString() || 'Never'}</span>
-            <span class="divider">|</span>
-            <span>Next update in: ${remainingSeconds}s</span>
+            <span>
+                Total spots: ${spotStatus.totalSpots} <br>
+                Last update ${spotStatus.lastUpdate?.toLocaleTimeString() || 'Never'}, next in ${remainingSeconds}s
+            </span>
         </div>
     `;
 }

@@ -1,4 +1,4 @@
-.qso-table {
+.paged-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: var(--spacing-sm);
@@ -8,7 +8,7 @@
     min-height: 0;
 }
 
-.qso-table th {
+.paged-table th {
     background-color: var(--bg-dark);
     color: var(--accent);
     padding: var(--spacing-sm);
@@ -23,25 +23,25 @@
     z-index: 1;
 }
 
-.qso-table td {
+.paged-table td {
     padding: var(--spacing-sm);
     border-bottom: 1px solid var(--border-color);
 }
 
-.qso-table tr {
+.paged-table tr {
     animation: fadeIn 0.3s ease-out;
     animation-fill-mode: both;
 }
 
-.qso-table tr:nth-child(even) {
+.paged-table tr:nth-child(even) {
     background-color: rgba(255, 255, 255, 0.03);
 }
 
-.qso-table tr:nth-child(odd) {
+.paged-table tr:nth-child(odd) {
     background-color: var(--bg-darker);
 }
 
-.qso-table tr:hover {
+.paged-table tr:hover {
     background-color: var(--accent) !important;
     color: var(--bg-darker);
 }

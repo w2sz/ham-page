@@ -1,19 +1,22 @@
-import { formatAge, formatGrid, formatDistance } from './formatters.js';
+import { formatAge, formatGrid, formatDistance, formatTime } from './formatters.js';
+
+const formatters = {
+    time: (val) => val.replace(/(\d{2})(\d{2})(\d{2})/, '$1:$2:$3'),
+    freq: (val) => parseFloat(val).toFixed(3),
+    grid: (val, config) => formatGrid(val, config),
+    distance: (val) => formatDistance(val),
+    db: (val) => `${val}dB`,
+    age: (val, _, data) => formatAge(data.timestamp)
+};
 
 export const formatCell = (cardId, colId, data, colConfig) => {
-    const formatters = {
-        pskReporter: {
-            age: (d) => formatAge(d.flowStartSeconds),
-            grid: (d) => formatGrid(d.grid, colConfig),
-            distance: (d) => formatDistance(d.distance, colConfig)
-        },
-        bandSummary: {
-            activity: (d) => formatActivity(d.activity),
-            spots: (d) => d.spots.toString()
-        }
-    };
-
-    return formatters[cardId]?.[colId]?.(data) ?? data[colId] ?? '';
+    // Use column format if specified
+    if (colConfig.format && formatters[colConfig.format]) {
+        return formatters[colConfig.format](data[colId], colConfig, data);
+    }
+    
+    // Fallback to raw value
+    return data[colId] || '';
 };
 
 export const getColumnHeader = (col) => {

@@ -4,7 +4,7 @@ import { fetchSpotData } from '../modules/api/pskReporter.js';
 import { parseADIF } from '../modules/data/pskReporter.js';
 import { PagedTable } from '../modules/components/PagedTable.js';
 import { getRandomQuotes } from '../data/quotes.js';
-import { updateBandSummary } from '../modules/bands.js';
+import { updateBandSummary } from '../modules/data/bands.js';
 import { spotStatus, getStatusHTML } from '../modules/api/pskReporter.js';
 
 let spotTable = null;
@@ -61,6 +61,13 @@ const updateQuote = async () => {
     quoteElement.innerHTML = `"${quote.text}" - ${quote.author}`;
 };
 
+const updateStatus = () => {
+    const statusElement = document.getElementById('psk-status');
+    if (!statusElement) return;
+    const statusHTML = getStatusHTML();
+    statusElement.innerHTML = statusHTML;
+};
+
 const initLayout = () => {
     const root = document.documentElement;
     root.style.setProperty('--grid-slots', CONFIG.display.layout.slots);
@@ -82,12 +89,14 @@ const init = () => {
     setInterval(updateHeaderInfo, 1000);
 
     // Initialize spot table
-    spotTable = new PagedTable('qso-list', {
-        pageSize: 20,
+    spotTable = new PagedTable('spotter-list', {
+        pageSize: 22,
         columns: CONFIG.cards.pskReporter.display.columns,
-        statusProvider: getStatusHTML,
         autoCycle: true
     });
+
+    updateStatus();
+    setInterval(updateStatus, 1000);
     
     // Start data updates
     updateSpots();

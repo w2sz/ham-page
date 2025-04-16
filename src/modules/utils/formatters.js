@@ -26,9 +26,11 @@ export const formatAge = (timestamp) => {
     }
     
     const now = Math.floor(Date.now() / 1000);
-    const diff = now - timestamp;
-    if (isNaN(diff)) return '';
+    // Convert string timestamp to number if needed
+    const ts = typeof timestamp === 'string' ? parseInt(timestamp, 10) : timestamp;
+    const diff = now - ts;
     
+    if (isNaN(diff)) return '';
     if (diff < 60) return 'now';
     if (diff < 3600) return `${Math.floor(diff / 60)}m`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
@@ -43,6 +45,8 @@ export const formatDistance = (km) => {
 
 export const formatGrid = (grid, columnConfig) => {
     if (!grid) return '';
-    const maxDigits = columnConfig?.maxDigits || grid.length;
-    return grid.substring(0, maxDigits);
+    // Default to 4 characters if not specified
+    const maxDigits = columnConfig?.maxDigits || 4;
+    // Ensure grid is uppercase and padded to maxDigits
+    return grid.toUpperCase().padEnd(maxDigits, ' ').substring(0, maxDigits);
 };
