@@ -1,20 +1,35 @@
 /* styles/components/solar-card.css */
 
+/* Card Content Container */
+.card-content {
+  width: 100%;
+  height: calc(100% - 32px);
+}
+
+/* Main Solar Component */
 .solar-compact {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: calc(100% - 10px);
   height: calc(100% - 10px);
   padding: 5px;
-  font-size: 0.85em;
+  font-size: 1em;
   gap: 6px;
+  margin: 0 auto;
 }
 
-/* Top row with main indices */
-.top-row {
+/* Row Layout - Consistent across all rows */
+.top-row, .middle-row, .bottom-row {
   display: flex;
-  gap: 8px;
   width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Top Row - SFI, SSN, A, K indices */
+.top-row {
+  gap: 8px;
 }
 
 .overall-block {
@@ -25,7 +40,6 @@
   background: var(--bg-dark);
   border-radius: var(--border-radius);
   flex: 0 0 auto;
-  width: 110px;
 }
 
 .overall-value {
@@ -89,11 +103,9 @@
   color: var(--text-secondary);
 }
 
-/* Middle row with metrics */
+/* Middle Row - Metrics */
 .middle-row {
-  display: flex;
   gap: 5px;
-  width: 100%;
 }
 
 .metrics-group {
@@ -118,25 +130,19 @@
   margin-right: 4px;
 }
 
-/* Bottom row with band conditions */
+/* Bottom Row - Stacked Day Band and VHF */
 .bottom-row {
-  display: flex;
-  gap: 5px;
-  width: 100%;
-  flex: 1;
-}
-
-.conditions-section {
-  flex: 3;
-  background: var(--bg-dark);
-  padding: 4px;
-  border-radius: var(--border-radius);
-  display: flex;
   flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  overflow: hidden;
 }
 
-.vhf-section {
-  flex: 1;
+/* Section Containers */
+.conditions-section, .vhf-section {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   background: var(--bg-dark);
   padding: 4px;
   border-radius: var(--border-radius);
@@ -153,6 +159,7 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+/* Band and VHF Condition Containers */
 .band-conditions, .vhf-conditions {
   display: flex;
   flex-wrap: wrap;
@@ -160,6 +167,7 @@
   flex: 1;
 }
 
+/* Band and VHF Items */
 .band-item, .vhf-item {
   background: var(--bg-darker);
   border-radius: var(--border-radius);
@@ -167,12 +175,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 0 0 calc(25% - 4px);
   min-width: 60px;
-}
-
-.vhf-item {
-  flex: 0 0 calc(100% - 4px);
+  flex: 1;
 }
 
 .band-label, .vhf-label {
@@ -203,7 +207,7 @@
   padding: 4px 0;
 }
 
-/* Condition colors */
+/* Condition Colors */
 .condition-poor,
 .gauge-poor {
   background-color: #ff6b6b;
@@ -236,6 +240,7 @@
   color: #333333;
 }
 
+/* Geomagnetic Colors */
 .geomag-quiet {
   color: #06d6a0;
 }
@@ -250,9 +255,4 @@
 
 .geomag-storm {
   color: #ff6b6b;
-}
-
-/* Make it fit in card-content without scrolling */
-.card-content {
-  height: calc(100% - 32px); /* Adjust based on your header height */
 }
