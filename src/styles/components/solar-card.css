@@ -256,3 +256,71 @@
 .geomag-storm {
   color: #ff6b6b;
 }
+
+/* Tooltip styling */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+
+.tooltip-content {
+  visibility: hidden;
+  position: absolute;
+  z-index: 100;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background-color: var(--bg-darker);
+  color: var(--text-primary);
+  text-align: center;
+  border-radius: var(--border-radius);
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.75em;
+  pointer-events: none;
+  border: 1px solid var(--accent);
+}
+
+.tooltip-container:hover .tooltip-content {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Arrow for tooltip */
+.tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--bg-darker) transparent transparent transparent;
+}
+
+/* Make tooltip appear above for bottom elements */
+.metric-item .tooltip-content {
+  bottom: 130%;
+}
+
+/* Adjust positioning for indices block */
+.index-item .tooltip-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Special styling for indices tooltips */
+.index-label.tooltip-container .tooltip-content {
+  bottom: 175%;
+}
+
+/* Wider tooltips for complex explanations */
+.tooltip-container.wide .tooltip-content {
+  width: 250px;
+}
