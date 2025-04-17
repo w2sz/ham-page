@@ -206,9 +206,8 @@ export class Table {
         <div class="pagination-controls" align="center">
           <button id="first-page" ${this.currentPage === 0 ? 'disabled' : ''}>|&lt;</button>
           <button id="prev-page" ${this.currentPage === 0 ? 'disabled' : ''}>&lt;</button>
-          <span>Page</span>
           <input id="page-input" type="number" min="1" max="${totalPages}" value="${this.currentPage + 1}" />
-          <span>/ ${totalPages}</span>
+          <span style="font-size: var(--font-size-small)">/ ${totalPages}</span>
           <button id="next-page" ${this.currentPage >= totalPages - 1 ? 'disabled' : ''}>&gt;</button>
           <button id="last-page" ${this.currentPage >= totalPages - 1 ? 'disabled' : ''}>&gt;|</button>
           <button id="auto-cycle">${this.autoCycleInterval ? 'Stop' : 'Auto'}</button>
