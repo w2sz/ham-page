@@ -299,7 +299,7 @@ export class DXClusterCard {
       <div>
         ${status.spotCount} spots
         ${status.lastUpdate 
-          ? `<span class="divider">|</span> Last update: ${status.lastUpdate.toLocaleTimeString()}`
+          ? `<span class="divider">|</span> Fetched: ${status.lastUpdate.toLocaleTimeString()}`
           : ''
         }
       </div>

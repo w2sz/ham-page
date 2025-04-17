@@ -21,6 +21,7 @@ export class SolarCard {
     
     this.config = config;
     this.contentElement = null;
+    this.statusElement = null;
     
     // Determine if it's day or night for band conditions
     this.isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
@@ -47,7 +48,12 @@ export class SolarCard {
       <div class="card-content">
         <div id="${this.container.id}-content"></div>
       </div>
+      <div class="card-footer">
+        <div id="${this.container.id}-status" class="status-text"></div>
+      </div>
     `;
+
+    this.statusElement = document.getElementById(`${this.container.id}-status`);
 
     // Get content element
     this.contentElement = document.getElementById(`${this.container.id}-content`);
@@ -76,6 +82,33 @@ export class SolarCard {
     } else if (data.solarData) {
       this.updateDisplay(data.solarData);
     }
+
+    this.updateStatus();
+  }
+
+  /**
+   * Update status information
+   */
+  updateStatus() {
+    if (!this.statusElement) return;
+    
+    const status = solarModel.getStatus();
+    
+    if (status.isEmpty) {
+      this.statusElement.innerHTML = `
+        <div>No solar activity data available</div>
+      `;
+      return;
+    }
+    
+    this.statusElement.innerHTML = `
+      <div>
+        ${status.lastUpdate 
+          ? `<br>Fetched: ${status.lastUpdate.toLocaleTimeString()}`
+          : ``
+        }
+      </div>
+    `;
   }
 
   /**
@@ -194,13 +227,11 @@ export class SolarCard {
             <div class="metric-item"><span>X-Ray:</span> ${data.xRay || 'N/A'}</div>
             <div class="metric-item"><span>Wind:</span> ${data.solarWind || 'N/A'}</div>
             <div class="metric-item"><span>MagF:</span> ${data.magneticField || 'N/A'}</div>
-          </div>
-          <div class="metrics-group">
             <div class="metric-item"><span>GeoM:</span> <span class="${this.getGeomagClass(data.geomagField)}">${data.geomagField || 'N/A'}</span></div>
-            <div class="metric-item"><span>PrFlux:</span> ${data.protonFlux || 'N/A'}</div>
-            <div class="metric-item"><span>ElFlux:</span> ${data.electronFlux || 'N/A'}</div>
           </div>
           <div class="metrics-group">
+            <div class="metric-item"><span>PrFlux:</span> ${data.protonFlux || 'N/A'}</div>            
+            <div class="metric-item"><span>ElFlux:</span> ${data.electronFlux || 'N/A'}</div>
             <div class="metric-item"><span>MUF:</span> ${data.muf || 'N/A'}</div>
             <div class="metric-item"><span>S/N:</span> ${data.signalNoise || 'N/A'}</div>
             <div class="metric-item"><span>Aurora:</span> ${data.aurora || 'N/A'}</div>
@@ -223,7 +254,6 @@ export class SolarCard {
             </div>
           </div>
         </div>
-        <div class="status-text">${data.source || 'Unknown'} | ${data.updated || 'Unknown'}</div>
       </div>
     `;
     

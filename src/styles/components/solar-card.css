@@ -23,7 +23,7 @@
   display: flex;
   width: 100%;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 1vh auto;
   box-sizing: border-box;
 }
 
@@ -105,7 +105,7 @@
 
 /* Middle Row - Metrics */
 .middle-row {
-  gap: 5px;
+  gap: 10px;
 }
 
 .metrics-group {
@@ -113,7 +113,7 @@
   flex-direction: column;
   flex: 1;
   background: var(--bg-dark);
-  padding: 4px;
+  padding: 16px;
   border-radius: var(--border-radius);
   gap: 2px;
 }
@@ -133,7 +133,7 @@
 /* Bottom Row - Stacked Day Band and VHF */
 .bottom-row {
   flex-direction: column;
-  gap: 5px;
+  gap: 1vh;
   flex: 1;
   overflow: hidden;
 }

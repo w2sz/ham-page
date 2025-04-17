@@ -119,7 +119,7 @@ export class BandSummaryCard {
       <div>
         ${status.bandCount} active bands with ${status.totalSpots} total spots
         ${status.lastUpdate 
-          ? `<br>Last update: ${status.lastUpdate.toLocaleTimeString()}`
+          ? `<br>Fetched: ${status.lastUpdate.toLocaleTimeString()}`
           : ''
         }
       </div>
