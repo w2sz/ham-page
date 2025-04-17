@@ -1,4 +1,5 @@
-name = "ham-page"
+# wrangler.toml
+name = 'ham-page-w2sz'
 main = "workers/index.js"
 compatibility_date = "2025-04-15"
 
