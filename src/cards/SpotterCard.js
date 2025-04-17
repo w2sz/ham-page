@@ -95,7 +95,7 @@ export class SpotterCard {
       <div>
         Total spots: ${status.totalSpots} in last 24h
         ${status.lastUpdate 
-          ? `<br>Last update: ${status.lastUpdate.toLocaleTimeString()}`
+          ? `<br>Fetched: ${status.lastUpdate.toLocaleTimeString()}`
           : ''
         }
       </div>

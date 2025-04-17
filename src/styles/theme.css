@@ -48,7 +48,10 @@ body {
     display: grid;
     grid-template-rows: auto 1fr;
     height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scrolling on the whole page */
     overflow: hidden;
+    width: 100%; /* Ensure body width is exactly 100% */
+    max-width: 100%; /* Prevent exceeding viewport width */
     font-size: var(--font-size-base);
 }
 

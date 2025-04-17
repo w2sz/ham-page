@@ -21,9 +21,12 @@ export class SolarCard {
     
     this.config = config;
     this.contentElement = null;
-    
-    // Determine if it's day or night for band conditions
-    this.isDay = new Date().getHours() >= 6 && new Date().getHours() < 18;
+    this.statusElement = null;
+
+    this.isDay = () => { 
+      const hours = new Date().getHours(); 
+      return hours >= 6 && hours < 18; 
+    };
     
     // Initialize the card UI
     this.initialize();
@@ -47,7 +50,12 @@ export class SolarCard {
       <div class="card-content">
         <div id="${this.container.id}-content"></div>
       </div>
+      <div class="card-footer">
+        <div id="${this.container.id}-status" class="status-text"></div>
+      </div>
     `;
+
+    this.statusElement = document.getElementById(`${this.container.id}-status`);
 
     // Get content element
     this.contentElement = document.getElementById(`${this.container.id}-content`);
@@ -76,6 +84,33 @@ export class SolarCard {
     } else if (data.solarData) {
       this.updateDisplay(data.solarData);
     }
+
+    this.updateStatus();
+  }
+
+  /**
+   * Update status information
+   */
+  updateStatus() {
+    if (!this.statusElement) return;
+    
+    const status = solarModel.getStatus();
+    
+    if (status.isEmpty) {
+      this.statusElement.innerHTML = `
+        <div>No solar activity data available</div>
+      `;
+      return;
+    }
+    
+    this.statusElement.innerHTML = `
+      <div>
+        ${status.lastUpdate 
+          ? `<br>Fetched: ${status.lastUpdate.toLocaleTimeString()}`
+          : ``
+        }
+      </div>
+    `;
   }
 
   /**
@@ -118,7 +153,7 @@ export class SolarCard {
     
     // Count occurrences of each condition
     const conditionCounts = {};
-    const timeOfDay = this.isDay ? 'day' : 'night';
+    const timeOfDay = this.isDay() ? 'day' : 'night';
     const relevantConditions = bandConditions[timeOfDay] || {};
     
     Object.values(relevantConditions).forEach(condition => {
@@ -138,98 +173,172 @@ export class SolarCard {
     
     return mostCommonCondition;
   }
-
-  /**
-   * Update display with solar data
-   * @param {Object} data - Solar data
-   */
-  updateDisplay(data) {
-    if (!this.contentElement || !data) return;
-    
-    // Calculate overall condition if not provided
-    const overallCondition = data.overallCondition || this.computeOverallCondition(data.bandConditions);
-    
-    // Determine which time of day to display
-    const timeOfDay = this.isDay ? 'day' : 'night';
-    
-    // Create HTML content for compact viewing
-    const html = `
-      <div class="solar-compact">
-        <!-- Top row: Main indices, overall condition and source -->
-        <div class="top-row">
-          <!-- Overall condition -->
-          <div class="overall-block">
-            <div class="overall-value ${this.getConditionClass(overallCondition)}">${overallCondition || 'Unknown'}</div>
-            <div class="index-label">Overall</div>
-          </div>
-          
-          <!-- Main indices -->
-          <div class="indices-block">
-            <div class="index-item">
-              <div class="index-value">${data.solarFlux || 'N/A'}</div>
-              <div class="index-bar"><span class="${this.getIndexClass('SFI', data.solarFlux)}" style="width:${this.calculateGaugeWidth('SFI', data.solarFlux)}%"></span></div>
-              <div class="index-label">SFI</div>
-            </div>
-            <div class="index-item">
-              <div class="index-value">${data.sunspots || 'N/A'}</div>
-              <div class="index-bar"><span class="${this.getIndexClass('SSN', data.sunspots)}" style="width:${this.calculateGaugeWidth('SSN', data.sunspots)}%"></span></div>
-              <div class="index-label">SSN</div>
-            </div>
-            <div class="index-item">
-              <div class="index-value">${data.aIndex || 'N/A'}</div>
-              <div class="index-bar"><span class="${this.getIndexClass('A', data.aIndex)}" style="width:${this.calculateGaugeWidth('A', data.aIndex)}%"></span></div>
-              <div class="index-label">A</div>
-            </div>
-            <div class="index-item">
-              <div class="index-value">${data.kIndex || 'N/A'}</div>
-              <div class="index-bar"><span class="${this.getIndexClass('K', data.kIndex)}" style="width:${this.calculateGaugeWidth('K', data.kIndex)}%"></span></div>
-              <div class="index-label">K</div>
-            </div>
+/**
+ * Update display with solar data
+ * @param {Object} data - Solar data
+ */
+updateDisplay(data) {
+  if (!this.contentElement || !data) return;
+  
+  // Calculate overall condition if not provided
+  const overallCondition = data.overallCondition || this.computeOverallCondition(data.bandConditions);
+  
+  // Determine which time of day to display
+  const timeOfDay = this.isDay() ? 'day' : 'night';
+  
+  // Tooltip explanations for various metrics
+  const tooltips = {
+    overall: "Overall propagation conditions based on solar indices and band reports.",
+    sfi: "Solar Flux Index (SFI) measures solar radiation at 2800 MHz. Higher values generally indicate better HF propagation.",
+    ssn: "Sunspot Number (SSN) indicates the number of visible sunspots. Higher values correlate with better HF conditions.",
+    aIndex: "A-Index measures geomagnetic activity over 24 hours. Lower values (under 10) are better for HF propagation.",
+    kIndex: "K-Index measures geomagnetic disturbance over 3 hours. Values of 0-3 are good for HF, while 5+ can disrupt propagation.",
+    xRay: "X-Ray flux indicates solar flare activity. Higher values can cause radio blackouts.",
+    wind: "Solar Wind speed in km/s. Higher values may indicate incoming geomagnetic disturbances.",
+    magF: "Interplanetary Magnetic Field strength in nT. Higher values can indicate disruptions.",
+    geoM: "Geomagnetic field condition affects radio propagation. 'Quiet' is best for stable conditions.",
+    proton: "Proton Flux measures solar radiation. Elevated levels can disrupt HF propagation.",
+    electron: "Electron Flux measures radiation. Elevated levels can affect satellite communications.",
+    muf: "Maximum Usable Frequency is the highest frequency reliably reflected by the ionosphere.",
+    signalNoise: "Signal-to-Noise Ratio estimate for typical HF conditions.",
+    aurora: "Aurora activity level. Higher values indicate possible VHF aurora propagation but HF disruption."
+  };
+  
+  // Create HTML content for compact viewing
+  const html = `
+    <div class="solar-compact">
+      <!-- Top row: Main indices, overall condition and source -->
+      <div class="top-row">
+        <!-- Overall condition -->
+        <div class="overall-block">
+          <div class="overall-value ${this.getConditionClass(overallCondition)}">${overallCondition || 'Unknown'}</div>
+          <div class="index-label tooltip-container">
+            Overall
+            <div class="tooltip-content">${tooltips.overall}</div>
           </div>
         </div>
         
-        <!-- Middle row: Additional metrics in compact form -->
-        <div class="middle-row">
-          <div class="metrics-group">
-            <div class="metric-item"><span>X-Ray:</span> ${data.xRay || 'N/A'}</div>
-            <div class="metric-item"><span>Wind:</span> ${data.solarWind || 'N/A'}</div>
-            <div class="metric-item"><span>MagF:</span> ${data.magneticField || 'N/A'}</div>
-          </div>
-          <div class="metrics-group">
-            <div class="metric-item"><span>GeoM:</span> <span class="${this.getGeomagClass(data.geomagField)}">${data.geomagField || 'N/A'}</span></div>
-            <div class="metric-item"><span>PrFlux:</span> ${data.protonFlux || 'N/A'}</div>
-            <div class="metric-item"><span>ElFlux:</span> ${data.electronFlux || 'N/A'}</div>
-          </div>
-          <div class="metrics-group">
-            <div class="metric-item"><span>MUF:</span> ${data.muf || 'N/A'}</div>
-            <div class="metric-item"><span>S/N:</span> ${data.signalNoise || 'N/A'}</div>
-            <div class="metric-item"><span>Aurora:</span> ${data.aurora || 'N/A'}</div>
-          </div>
-        </div>
-        
-        <!-- Bottom row: Band conditions -->
-        <div class="bottom-row">
-          <div class="conditions-section">
-            <div class="section-title">${this.isDay ? 'Day' : 'Night'} Band Conditions</div>
-            <div class="band-conditions">
-              ${this.renderCompactBandConditions(data.bandConditions?.[timeOfDay] || {})}
+        <!-- Main indices -->
+        <div class="indices-block">
+          <div class="index-item">
+            <div class="index-value">${data.solarFlux || 'N/A'}</div>
+            <div class="index-bar"><span class="${this.getIndexClass('SFI', data.solarFlux)}" style="width:${this.calculateGaugeWidth('SFI', data.solarFlux)}%"></span></div>
+            <div class="index-label tooltip-container">
+              SFI
+              <div class="tooltip-content">${tooltips.sfi}</div>
             </div>
           </div>
-          
-          <div class="vhf-section">
-            <div class="section-title">VHF</div>
-            <div class="vhf-conditions">
-              ${this.renderCompactVhfConditions(data.vhfConditions || {})}
+          <div class="index-item">
+            <div class="index-value">${data.sunspots || 'N/A'}</div>
+            <div class="index-bar"><span class="${this.getIndexClass('SSN', data.sunspots)}" style="width:${this.calculateGaugeWidth('SSN', data.sunspots)}%"></span></div>
+            <div class="index-label tooltip-container">
+              SSN
+              <div class="tooltip-content">${tooltips.ssn}</div>
+            </div>
+          </div>
+          <div class="index-item">
+            <div class="index-value">${data.aIndex || 'N/A'}</div>
+            <div class="index-bar"><span class="${this.getIndexClass('A', data.aIndex)}" style="width:${this.calculateGaugeWidth('A', data.aIndex)}%"></span></div>
+            <div class="index-label tooltip-container">
+              A
+              <div class="tooltip-content">${tooltips.aIndex}</div>
+            </div>
+          </div>
+          <div class="index-item">
+            <div class="index-value">${data.kIndex || 'N/A'}</div>
+            <div class="index-bar"><span class="${this.getIndexClass('K', data.kIndex)}" style="width:${this.calculateGaugeWidth('K', data.kIndex)}%"></span></div>
+            <div class="index-label tooltip-container">
+              K
+              <div class="tooltip-content">${tooltips.kIndex}</div>
             </div>
           </div>
         </div>
-        <div class="status-text">${data.source || 'Unknown'} | ${data.updated || 'Unknown'}</div>
       </div>
-    `;
-    
-    // Update the container
-    this.contentElement.innerHTML = html;
-  }
+      
+      <!-- Middle row: Additional metrics in compact form -->
+      <div class="middle-row">
+        <div class="metrics-group">
+          <div class="metric-item">
+            <span class="tooltip-container">X-Ray:
+              <div class="tooltip-content">${tooltips.xRay}</div>
+            </span>
+            ${data.xRay || 'N/A'}
+          </div>
+          <div class="metric-item">
+            <span class="tooltip-container">Wind:
+              <div class="tooltip-content">${tooltips.wind}</div>
+            </span>
+            ${data.solarWind || 'N/A'}
+          </div>
+          <div class="metric-item">
+            <span class="tooltip-container">MagF:
+              <div class="tooltip-content">${tooltips.magF}</div>
+            </span>
+            ${data.magneticField || 'N/A'}
+          </div>
+          <div class="metric-item">
+            <span class="tooltip-container">GeoM:
+              <div class="tooltip-content">${tooltips.geoM}</div>
+            </span>
+            <span class="${this.getGeomagClass(data.geomagField)}">${data.geomagField || 'N/A'}</span>
+          </div>
+        </div>
+        <div class="metrics-group">
+          <div class="metric-item">
+            <span class="tooltip-container">PrFlux:
+              <div class="tooltip-content">${tooltips.proton}</div>
+            </span>
+            ${data.protonFlux || 'N/A'}
+          </div>            
+          <div class="metric-item">
+            <span class="tooltip-container">ElFlux:
+              <div class="tooltip-content">${tooltips.electron}</div>
+            </span>
+            ${data.electronFlux || 'N/A'}
+          </div>
+          <div class="metric-item">
+            <span class="tooltip-container">MUF:
+              <div class="tooltip-content">${tooltips.muf}</div>
+            </span>
+            ${data.muf || 'N/A'}
+          </div>
+          <div class="metric-item">
+            <span class="tooltip-container">S/N:
+              <div class="tooltip-content">${tooltips.signalNoise}</div>
+            </span>
+            ${data.signalNoise || 'N/A'}
+          </div>
+          <div class="metric-item">
+            <span class="tooltip-container">Aurora:
+              <div class="tooltip-content">${tooltips.aurora}</div>
+            </span>
+            ${data.aurora || 'N/A'}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom row: Band conditions -->
+      <div class="bottom-row">
+        <div class="conditions-section">
+          <div class="section-title">${this.isDay ? 'Day' : 'Night'} Band Conditions</div>
+          <div class="band-conditions">
+            ${this.renderCompactBandConditions(data.bandConditions?.[timeOfDay] || {})}
+          </div>
+        </div>
+        
+        <div class="vhf-section">
+          <div class="section-title">VHF</div>
+          <div class="vhf-conditions">
+            ${this.renderCompactVhfConditions(data.vhfConditions || {})}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Update the container
+  this.contentElement.innerHTML = html;
+}
 
   /**
    * Calculate gauge width percentage based on index value

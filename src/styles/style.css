@@ -23,16 +23,18 @@
 
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
-    .cards-container {
-        grid-template-columns: 1fr;
+    .solar-compact {
+      font-size: 0.9em; /* Reduce font size on small screens */
     }
     
-    .card {
-        grid-column: 1 !important;
+    .metrics-group {
+      padding: 8px; /* Reduce padding on mobile */
     }
     
-    #header-info {
+    /* Stack metrics groups on very small screens */
+    @media screen and (max-width: 480px) {
+      .middle-row {
         flex-direction: column;
-        align-items: flex-start;
+      }
     }
-}
+  }

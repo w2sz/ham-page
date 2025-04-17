@@ -10,6 +10,7 @@ import { SpotterCard } from './cards/SpotterCard.js';
 import { BandSummaryCard } from './cards/BandSummaryCard.js';
 import { SolarCard } from './cards/SolarCard.js';
 import { updateHeaderInfo } from './components/Header.js';
+import { initializeQuoteDisplay } from './components/QuoteDisplay.js';
 
 /**
  * Main application class
@@ -88,13 +89,10 @@ class HamDashboard {
     // Create cards based on config
     this.cards.spotter = new SpotterCard('psk-reporter', CONFIG.cards.pskReporter);
     this.cards.bands = new BandSummaryCard('band-summary', CONFIG.cards.bandSummary);
-    this.cards.solar = new SolarCard('solar-data', {
-      title: 'Solar Data',
-      display: { showLastUpdate: true }
-    });
+    this.cards.solar = new SolarCard('solar-data', CONFIG.cards.solarData);
     
     // Initialize quote display in footer
-    quotesModel.refreshQuote();
+    this.quote = initializeQuoteDisplay();
   }
 
   /**
