@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ham Page</title>
+    <title>Ham Dashboard</title>
     <link rel="stylesheet" href="styles/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -19,18 +19,25 @@
         <div class="cards-container">
             <div class="card" id="psk-reporter">
                 <h2>Spotter Network</h2>
-                <div id="spotter-list"></div>
-                <div id="psk-status" class="status-text"></div>
+                <div id="psk-reporter-table"></div>
+                <div id="psk-reporter-status" class="status-text"></div>
             </div>
             <div class="card" id="band-summary">
                 <h2>Band Activity Summary</h2>
-                <div id="band-summary-content"></div>
+                <div id="band-summary-table"></div>
+                <div id="band-summary-status" class="status-text"></div>
+            </div>
+            <div class="card" id="solar-data">
+                <h2>Solar Data</h2>
+                <div id="solar-data-content"></div>
+                <div id="solar-data-status" class="status-text"></div>
             </div>
         </div>
     </main>
     <footer>
         <div id="quote"></div>
     </footer>
-    <script type="module" src="scripts/app.js"></script>
+    <!-- Main app script -->
+    <script type="module" src="app.js"></script>
 </body>
 </html>

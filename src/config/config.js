@@ -1,3 +1,9 @@
+// src/config/config.js
+import { REFRESH_INTERVALS, THEME_COLORS } from './constants.js';
+
+/**
+ * Application configuration
+ */
 export const CONFIG = {
     station: {
         callsign: "W1AW",
@@ -10,11 +16,7 @@ export const CONFIG = {
         dxThreshold: 5000,
         screenSaverDelay: 300,
         theme: {
-            accent: {
-                hue: 51,
-                saturation: 100,
-                lightness: 50
-            },
+            accent: THEME_COLORS.ACCENT_COLORS.GOLD,
             fontSize: {
                 base: 'clamp(0.8rem, 1.2vw, 1.6rem)',
                 large: 'clamp(1rem, 1.5vw, 2rem)',
@@ -35,20 +37,22 @@ export const CONFIG = {
             grid: {
                 cards: {
                     'psk-reporter': { slot: 1, height: 'full' },
-                    'band-summary': { slot: 2, height: 'full' }
+                    'band-summary': { slot: 2, height: 'full' },
+                    'solar-data': { slot: 3, height: 'full' }
                 }
             }
         }
     },
     refreshIntervals: {
-        pskReporter: 300,  // 5 minutes
-        bandSummary: 300,  // 5 minutes
-        quotes: 30         // 30 seconds
+        pskReporter: REFRESH_INTERVALS.MEDIUM,  // 5 minutes
+        solar: REFRESH_INTERVALS.VERY_SLOW,     // 1 hour
+        bandSummary: REFRESH_INTERVALS.MEDIUM,  // 5 minutes
+        quotes: REFRESH_INTERVALS.FAST          // 30 seconds
     },
     cards: {
         pskReporter: {
             id: 'psk-reporter',
-            title: 'PSK Reporter',
+            title: 'Spotter Network',
             display: {
                 showLastUpdate: true,
                 columns: [
@@ -70,27 +74,21 @@ export const CONFIG = {
                 showLastUpdate: true,
                 columns: [
                     { id: 'band', label: 'BAND', align: 'left' },
-                    { id: 'freq', label: 'FREQ', align: 'right' },
-                    { id: 'activity', label: 'ACT', align: 'center' },
-                    { id: 'spots', label: 'SPOTS', align: 'right' }
+                    { id: 'activityStars', label: 'ACTIVITY', align: 'center' },
+                    { id: 'count', label: 'SPOTS', align: 'right' },
+                    { id: 'maxSignal', label: 'BEST DB', align: 'right', 
+                      formatter: (val) => val > -999 ? `${val} dB` : 'N/A' }
                 ]
+            }
+        },
+        solarData: {
+            id: 'solar-data',
+            title: 'Solar Data',
+            display: {
+                showLastUpdate: true
             }
         }
     },
-    bands: [
-        { name: '160m', min: 1.8, max: 2.0 },
-        { name: '80m', min: 3.5, max: 4.0 },
-        { name: '40m', min: 7.0, max: 7.3 },
-        { name: '30m', min: 10.1, max: 10.15 },
-        { name: '20m', min: 14.0, max: 14.35 },
-        { name: '17m', min: 18.068, max: 18.168 },
-        { name: '15m', min: 21.0, max: 21.45 },
-        { name: '12m', min: 24.89, max: 24.99 },
-        { name: '10m', min: 28.0, max: 29.7 },
-        { name: '6m', min: 50.0, max: 54.0 },
-        { name: '2m', min: 144.0, max: 148.0 },
-        { name: '70cm', min: 420.0, max: 450.0 }
-    ],
     pskReporter: {
         baseUrl: 'https://pskreporter.info/cgi-bin',
         queryPath: '/pskdata.pl',
@@ -104,8 +102,10 @@ export const CONFIG = {
     ]
 };
 
-// Helper function to initialize theme CSS variables
-export const initTheme = () => {
+/**
+ * Initialize theme CSS variables
+ */
+export function initTheme() {
     const root = document.documentElement;
     const { theme } = CONFIG.display;
     
@@ -120,4 +120,4 @@ export const initTheme = () => {
     root.style.setProperty('--spacing-sm', theme.spacing.sm);
     root.style.setProperty('--spacing-md', theme.spacing.md);
     root.style.setProperty('--spacing-lg', theme.spacing.lg);
-};
+}

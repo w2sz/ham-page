@@ -1,0 +1,258 @@
+/* styles/components/solar-card.css */
+
+.solar-compact {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 10px);
+  padding: 5px;
+  font-size: 0.85em;
+  gap: 6px;
+}
+
+/* Top row with main indices */
+.top-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.overall-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+  background: var(--bg-dark);
+  border-radius: var(--border-radius);
+  flex: 0 0 auto;
+  width: 110px;
+}
+
+.overall-value {
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: var(--border-radius);
+  margin-bottom: 3px;
+  text-align: center;
+}
+
+.source-info {
+  font-size: 0.7em;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.indices-block {
+  display: flex;
+  flex: 1;
+  gap: 5px;
+}
+
+.index-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-dark);
+  padding: 4px;
+  border-radius: var(--border-radius);
+  flex: 1;
+}
+
+.index-value {
+  font-weight: bold;
+  font-family: var(--font-mono);
+  margin-bottom: 2px;
+}
+
+.index-bar {
+  width: 100%;
+  height: 3px;
+  background: var(--bg-darker);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+
+.index-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.5s ease;
+}
+
+.index-label {
+  font-size: 0.7em;
+  color: var(--text-secondary);
+}
+
+/* Middle row with metrics */
+.middle-row {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+}
+
+.metrics-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: var(--bg-dark);
+  padding: 4px;
+  border-radius: var(--border-radius);
+  gap: 2px;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8em;
+}
+
+.metric-item span:first-child {
+  color: var(--text-secondary);
+  margin-right: 4px;
+}
+
+/* Bottom row with band conditions */
+.bottom-row {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  flex: 1;
+}
+
+.conditions-section {
+  flex: 3;
+  background: var(--bg-dark);
+  padding: 4px;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+}
+
+.vhf-section {
+  flex: 1;
+  background: var(--bg-dark);
+  padding: 4px;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title {
+  font-size: 0.75em;
+  color: var(--accent);
+  font-weight: bold;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.band-conditions, .vhf-conditions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1;
+}
+
+.band-item, .vhf-item {
+  background: var(--bg-darker);
+  border-radius: var(--border-radius);
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 calc(25% - 4px);
+  min-width: 60px;
+}
+
+.vhf-item {
+  flex: 0 0 calc(100% - 4px);
+}
+
+.band-label, .vhf-label {
+  font-size: 0.75em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.band-value, .vhf-value {
+  font-size: 0.7em;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  padding: 2px 0;
+  border-radius: 2px;
+}
+
+.no-data {
+  color: var(--text-secondary);
+  font-size: 0.75em;
+  text-align: center;
+  font-style: italic;
+  width: 100%;
+  padding: 4px 0;
+}
+
+/* Condition colors */
+.condition-poor,
+.gauge-poor {
+  background-color: #ff6b6b;
+  color: #800000;
+}
+
+.condition-fair,
+.gauge-fair {
+  background-color: #ffd166;
+  color: #805500;
+}
+
+.condition-good,
+.gauge-good {
+  background-color: #06d6a0;
+  color: #004d3d;
+}
+
+.condition-very-good,
+.condition-excellent,
+.gauge-excellent {
+  background-color: #118ab2;
+  color: #ffffff;
+}
+
+.condition-closed,
+.condition-unknown,
+.gauge-unknown {
+  background-color: #999999;
+  color: #333333;
+}
+
+.geomag-quiet {
+  color: #06d6a0;
+}
+
+.geomag-unsettled {
+  color: #ffd166;
+}
+
+.geomag-active {
+  color: #ff9f1c;
+}
+
+.geomag-storm {
+  color: #ff6b6b;
+}
+
+/* Make it fit in card-content without scrolling */
+.card-content {
+  height: calc(100% - 32px); /* Adjust based on your header height */
+}
