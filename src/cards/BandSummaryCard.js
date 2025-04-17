@@ -56,7 +56,7 @@ export class BandSummaryCard {
       { id: 'activityStars', label: 'ACTIVITY', align: 'center' },
       { id: 'count', label: 'SPOTS', align: 'right' },
       { id: 'maxSignal', label: 'BEST DB', align: 'right', 
-        formatter: (val) => val > -999 ? `${val} dB` : 'N/A' }
+        formatter: (val) => val > -999 ? `${val}` : 'N/A' }
     ];
 
     // Initialize table component with hidden controls

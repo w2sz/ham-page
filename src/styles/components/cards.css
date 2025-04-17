@@ -1,11 +1,38 @@
+.cards-container, 
+header, 
+footer,
+.card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box; /* Include padding in width calculations */
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
 .cards-container {
     display: grid;
     grid-template-columns: repeat(var(--grid-slots, 4), 1fr);
     gap: 1vh;
     padding: 1vh;
-    width: 100%;
+    box-sizing: border-box; /* Include padding in width calculation */
+    width: 100vw;
+    max-width: 100vw;
     height: calc(100vh - var(--header-height) - var(--footer-height));
-    overflow-y: auto; /* Allow container to scroll */
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
+
+.card {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1vh;
+    box-sizing: border-box; /* Include padding in width calculation */
+    height: auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1vh;
+    width: 100%; /* Take up full width of grid cell */
+    max-width: 100%; /* Ensure it doesn't overflow */
 }
 
 .card {
@@ -17,7 +44,7 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px; /* Add margin to avoid footer overlap */
+    margin-bottom: 1vh; /* Add margin to avoid footer overlap */
 }
 
 .card h2 {

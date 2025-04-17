@@ -10,6 +10,7 @@ import { SpotterCard } from './cards/SpotterCard.js';
 import { BandSummaryCard } from './cards/BandSummaryCard.js';
 import { SolarCard } from './cards/SolarCard.js';
 import { updateHeaderInfo } from './components/Header.js';
+import { initializeQuoteDisplay } from './components/QuoteDisplay.js';
 
 /**
  * Main application class
@@ -91,7 +92,7 @@ class HamDashboard {
     this.cards.solar = new SolarCard('solar-data', CONFIG.cards.solarData);
     
     // Initialize quote display in footer
-    quotesModel.refreshQuote();
+    this.quote = initializeQuoteDisplay();
   }
 
   /**

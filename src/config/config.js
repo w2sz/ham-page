@@ -74,7 +74,7 @@ export const CONFIG = {
                 showLastUpdate: true,
                 columns: [
                     { id: 'band', label: 'BAND', align: 'left' },
-                    { id: 'activityStars', label: 'ACTIVITY', align: 'center' },
+                    // { id: 'activityStars', label: 'ACTIVITY', align: 'center' },
                     { id: 'count', label: 'SPOTS', align: 'right' },
                     { id: 'maxSignal', label: 'BEST DB', align: 'right', 
                       formatter: (val) => val > -999 ? `${val} dB` : 'N/A' }

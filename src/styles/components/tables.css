@@ -1,5 +1,6 @@
 .paged-table {
     width: 100%;
+    table-layout: fixed; /* Fixed layout is necessary for column width control */
     border-collapse: collapse;
     margin-top: var(--spacing-sm);
     font-family: var(--font-mono);
@@ -26,6 +27,11 @@
 .paged-table td {
     padding: var(--spacing-sm);
     border-bottom: 1px solid var(--border-color);
+    table-layout: fixed;
+    white-space: nowrap; 
+    /* max-width: 1em; */
+    overflow-x: clip;
+    text-overflow: initial;
 }
 
 .paged-table tr {
