@@ -59,8 +59,8 @@ export const CONFIG = {
                     { id: 'call', label: 'CALL', align: 'left', visible: true },
                     { id: 'time', label: 'TIME', align: 'left', visible: false },
                     { id: 'freq', label: 'FREQ', align: 'right', visible: true },
-                    { id: 'mode', label: 'MODE', align: 'center', visible: true },
-                    { id: 'grid', label: 'GRID', align: 'center', maxDigits: 4, visible: true },
+                    { id: 'mode', label: 'MODE', align: 'right', visible: true },
+                    { id: 'grid', label: 'GRID', align: 'right', maxDigits: 4, visible: true },
                     { id: 'db', label: 'DB', align: 'right', visible: false }, // Hidden by default
                     { id: 'distance', label: 'DIST', align: 'right', unit: 'km', visible: true },
                     { id: 'age', label: 'AGE', align: 'right', visible: true }

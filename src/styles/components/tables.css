@@ -1,11 +1,11 @@
 .paged-table {
     width: 100%;
-    table-layout: fixed; /* Fixed layout is necessary for column width control */
+    /* table-layout: fixed; */
     border-collapse: collapse;
     margin-top: var(--spacing-sm);
     font-family: var(--font-mono);
     font-size: var(--font-size-base);
-    height: auto; /* Allow full expansion */
+    height: auto;
     min-height: 0;
 }
 
@@ -17,21 +17,18 @@
     border-bottom: 2px solid var(--border-color);
     font-weight: bold;
     text-transform: uppercase;
-    font-size: 0.9em;
-    letter-spacing: 0.05em;
+    font-size: 0.8em;
     position: sticky;
     top: 0;
-    z-index: 1;
 }
 
 .paged-table td {
     padding: var(--spacing-sm);
     border-bottom: 1px solid var(--border-color);
-    table-layout: fixed;
-    white-space: nowrap; 
-    /* max-width: 1em; */
-    overflow-x: clip;
-    text-overflow: initial;
+    white-space: nowrap;
+    font-size: 0.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .paged-table tr {
@@ -50,15 +47,4 @@
 .paged-table tr:hover {
     background-color: var(--accent) !important;
     color: var(--bg-darker);
-}
-
-.spot-update-time {
-    margin-top: var(--spacing-lg);
-    text-align: right;
-    font-size: var(--font-size-small);
-    color: var(--text-secondary);
-    position: sticky;
-    bottom: 0;
-    background: var(--bg-darker);
-    padding: var(--spacing-sm);
 }
