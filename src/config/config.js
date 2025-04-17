@@ -6,7 +6,7 @@ import { REFRESH_INTERVALS, THEME_COLORS } from './constants.js';
  */
 export const CONFIG = {
     station: {
-        callsign: "W1AW",
+        callsign: "W2SZ",
         gridsquare: "FN32",
         operator: "KD2TAI"
     },
